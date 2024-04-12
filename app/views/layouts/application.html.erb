@@ -9,9 +9,11 @@
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <%= hotwire_livereload_tags if Rails.env.development? %>
+    <%= render "shared/dark_mode_check" %>
   </head>
 
-  <body>
+ <body class="dark:bg-black" data-controller="dark-mode">
     <%= render "shared/navbar" %>
     <main class="container mx-auto mt-28 max-w-7xl px-2 sm:px-6 lg:px-8">
       <%= yield %>

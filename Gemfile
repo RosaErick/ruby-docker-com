@@ -71,6 +71,10 @@ group :test do
   gem "selenium-webdriver"
 end
 
+group :development do
+  gem "hotwire-livereload"
+end
+
 gem "devise", "~> 4.9"
 
 gem "font-awesome-sass", "~> 6.5.1"
