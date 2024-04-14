@@ -1,9 +1,33 @@
-<div class="min-h-screen">
-  <h1>Cart Page</h1>
-  <div id="errorContainer"></div>
-  <div data-controller="cart">
-    <div class="mt-4 font-medium" id="total"></div>
-    <button class="mt-6 py-2 px-4 bg-gray-500 hover:bg-gray-600 rounded text-white" data-action="click->cart#checkout">Checkout</button>
-    <button class="py-2 px-4 bg-gray-500 hover:bg-gray-600 rounded text-white" data-action="click->cart#clear">Clear Cart</button>
+<div class="min-h-screen bg-gray-50 dark:bg-transparent  ">
+  <div class="container mx-auto py-10">
+    
+    <h1 class="text-4xl font-bold text-gray-800 dark:text-white text-center mb-8">Your Cart</h1>
+    
+    <div id="errorContainer" class="text-red-500 dark:text-red-300 text-center"></div>
+    
+    <div data-controller="cart" class="shadow overflow-hidden rounded-lg bg-white dark:bg-black mt-4  hover:shadow-lg">
+       
+      <!-- Cart Items Placeholder -->
+      <div id="cartItems" class="p-4">
+        <!-- Cart items will be loaded here --> 
+      </div>
+
+      <!-- Total Amount -->
+      <div class="font-medium p-4 text-gray-800 dark:text-gray-200" id="total">
+        <!-- Total will be loaded here -->
+      </div>
+
+      <!-- Actions -->
+      <div class="flex justify-end space-x-4 p-4">
+        <button class="py-2 px-4 bg-red-500 hover:bg-red-600 rounded text-white transition-colors duration-150" data-action="click->cart#checkout">
+          Checkout
+        </button>
+        <button class="py-2 px-4 bg-gray-400 hover:bg-gray-500 rounded text-white transition-colors duration-150" data-action="click->cart#clear">
+          Clear Cart
+        </button>
+      </div>
+
+    </div>
+
   </div>
 </div>
