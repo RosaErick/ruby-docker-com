@@ -1,28 +1,47 @@
-<h1>Category Show Page</h1>
-<div class="min-h-screen flex justify-center">
-  <div class="flex flex-wrap flex-col mt-6">
-    <h2 class="text-lg text-gray-800">Filter</h2>
-    <%= form_with url: category_path(@category), method: :get, class: "flex flex-col"  do |form| %>
-      <%= form.number_field :min, placeholder: "Min Price", class: "border border-gray-800 rounded-md p-2 w-32" %>
-      <%= form.number_field :max, placeholder: "Max Price", class: "border border-gray-800 rounded-md p-2 mt-2 w-32" %>
-      <%= form.submit "Filter", class: "bg-gray-800 text-white rounded-md p-2 mt-2 cursor-pointer" %>
-    <% end %>
-    <%= form_with url: category_path(@category), method: :get, class: "flex flex-col" do |form| %>
-      <%= form.submit "Clear", class: "bg-gray-800 text-white rounded-md p-2 mt-2 cursor-pointer" %>
+<!-- Main Container -->
+<div class="flex">
+
+  <!-- Sidebar Filters Section -->
+  <div class="w-64 bg-white dark:bg-black p-5 space-y-6 rounded-lg shadow hover:shadow-lg transition duration-300 ease-in-out">
+    <h2 class="text-2xl font-bold text-gray-800 dark:text-white"><%= @category.name %></h2>
+
+    <%= form_with url: category_path(@category), method: :get do |form| %>
+      <div class="space-y-4">
+        <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300">Filter by Price</h3>
+        <%= form.number_field :min, placeholder: "Min price", class: "w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2 dark:bg-gray-700 dark:text-white" %>
+        <%= form.number_field :max, placeholder: "Max price", class: "w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2 dark:bg-gray-700 dark:text-white" %>
+
+        <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300">Search</h3>
+        <%= form.text_field :name, placeholder: "Product name", class: "w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2 dark:bg-gray-700 dark:text-white" %>
+
+        <%= form.submit "Apply Filters", class: "w-full bg-red-500 text-white rounded-lg p-2 cursor-pointer hover:bg-red-600" %>
+      </div>
     <% end %>
   </div>
-  <div class="flex flex-wrap mt-6 gap-10 flex-grow justify-center items-start">
+
+  <!-- Products Section -->
+  <div class="flex-grow container mx-auto px-4 py-10">
     <% if @products.empty? %>
-      <p class="text-2xl text-left text-gray-800">No products found</p>
+      <p class="text-2xl text-center text-gray-700 dark:text-gray-300">No products found</p>
     <% else %>
-      <% @products.each do |product| %>
-        <%= link_to product_path(product) do %>
-          <div class="max-w-xs flex flex-col p-4 justify-center items-center">
-            <%= product.images.first ? image_tag(product.images.first.variant(:medium), class: "rounded") : image_tag("http://via.placeholder.com/250", class: "rounded") %>
-            <p class="mt-6 font-medium text-gray-800"><%= product.name %></p>
-          </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <% @products.each do |product| %>
+          <%= link_to product_path(product), class: "bg-white dark:bg-black rounded-lg shadow hover:shadow-lg transition duration-300 ease-in-out" do %>
+            <div class="overflow-hidden">
+              <%= product.images.first ? image_tag(product.images.first.variant(:medium), class: "h-48 w-full object-cover transition-transform duration-500 ease-in-out transform hover:scale-105") : image_tag("http://via.placeholder.com/250", class: "h-48 w-full object-cover") %>
+            </div>
+            <div class="p-4">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2"><%= product.name %></h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400"><%= truncate(product.description, length: 100) %></p>
+              <div class="mt-3 flex justify-between items-center">
+                <span class="text-lg font-bold text-red-600 dark:text-red-400"><%= number_to_currency(product.price) %></span>
+                <span class="text-xs text-gray-500 dark:text-gray-400">More info</span>
+              </div>
+            </div>
+          <% end %>
         <% end %>
-      <% end %>
+      </div>
     <% end %>
   </div>
+  
 </div>
