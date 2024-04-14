@@ -12,9 +12,9 @@ class CheckoutsController < ApplicationController
         return
       end
 
-      { 
+      {
         quantity: item["quantity"].to_i,
-        price_data: { 
+        price_data: {
           product_data: {
             name: item["name"],
             metadata: { product_id: product.id, size: item["size"], product_stock_id: product_stock.id }
@@ -22,7 +22,7 @@ class CheckoutsController < ApplicationController
           currency: "usd",
           unit_amount: item["price"].to_i
         }
-      } 
+      }
     end
 
     puts "line_items: #{line_items}"
@@ -32,7 +32,7 @@ class CheckoutsController < ApplicationController
       line_items: line_items,
       success_url: "http://localhost:3000/success",
       cancel_url: "http://localhost:3000/cancel",
-      shipping_address_collection: { 
+      shipping_address_collection: {
         allowed_countries: ['US', 'CA']
       }
     )
