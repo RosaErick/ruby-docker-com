@@ -1,9 +1,13 @@
 <h1>Product show page</h1>
 <div class="flex justify-center gap-20 py-10">
   <div class="flex flex-wrap max-w-lg">
-  <% @product.images.each do |image| %>
-  <%= image_tag image.service_url, class: "w-auto h-64" %>
-<% end %>
+  <% if @product.images.attached? %>
+    <% @product.images.each do |image| %>
+      <%= image_tag image, class: "w-auto h-64" %>
+     <% end %>
+  <% else %>
+  <p>No image available</p>
+    <% end %>
   </div>
 
   <div data-controller="products" data-products-product-value="<%= @product.to_json %>" class="flex flex-col items-start max-w-sm">
