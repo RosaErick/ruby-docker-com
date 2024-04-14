@@ -1,16 +1,43 @@
-<div class="  text-center py-20">
-  <h1 class="text-5xl font-bold mb-4">Welcome to KAOS</h1>
-  <p class="text-xl mb-8">Your one-stop shop for all your e-commerce needs!</p>
-  <%= link_to "Shop Now", root_path, class: "bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded" %>
-</div>
+<!-- Main Container -->
+<div class="flex">
 
-<div class="flex flex-wrap justify-center mt-8 items-center gap-10">
-  <% @main_categories.each do |category| %>
-    <%= link_to category_path(category) do %>
-      <div class="flex flex-col mb-4">
-        <h2 class="text-gray-800 font-medium text-lg text-center mb-6"><%= category.name %></h2>
-        <%= category.image.present? ? image_tag(category.image, class: "max-w-lg") : image_tag("http://via.placeholder.com/512") %>
+  <!-- Sidebar Menu -->
+  <div class="w-64 h-scree p-5 hidden md:block">
+    <h2 class="font-bold text-xl mb-5">Ruby is awesome</h2>
+    <%= link_to "Home", root_path, class: "block mb-2 hover:text-red-600" %>
+
+
+    <!-- Add other links similarly --> 
+    <hr class="my-4">
+    <!-- ...other sidebar content... -->
+  </div>
+
+  <!-- Right Content -->
+  <div class="flex-grow">
+
+    <!-- Header Section with Logo -->
+    <div class="text-center py-10 shadow-md">
+      <%= image_tag "logo.png", alt: "KAOS logo", class: "h-24 mx-auto" %>
+      <h1 class="text-5xl font-bold mb-4">Rails + Hotwire + Tailwind!</h1> 
+      <p class="text-xl mb-8">a ready to go, ready to scale e-commerce</p>
+      <%= link_to "Shop Now", root_path, class: "bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" %>
+    </div>
+
+    <!-- Featured Collection Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+      <h2 class="text-3xl font-extrabold tracking-tigh">Featured Collection</h2>
+      <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-10 gap-x-6">
+        <% @main_categories.each do |category| %>
+          <%= link_to category_path(category), class: "group" do %>
+            <div class="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
+              <%= category.image.present? ? image_tag(category.image, class: "w-full h-full object-center object-cover group-hover:opacity-75") : image_tag("http://via.placeholder.com/512", class: "w-full h-full object-center object-cover group-hover:opacity-75") %>
+            </div>
+            <h3 class="mt-4 text-sm text-gray-700"><%= category.name %></h3>
+            <p class="mt-1 text-lg font-medium text-gray-900">Shop Now</p>
+          <% end %>
+        <% end %>
       </div>
-    <% end %>
-  <% end %>
+    </div>
+
+  </div>
 </div>
