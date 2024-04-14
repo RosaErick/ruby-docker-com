@@ -1,6 +1,6 @@
-# Ruby E-Commerce Platform
+# Hi!
 
-Ruby E-Commerce Platform is a robust template for building online stores, crafted using Ruby on Rails and Tailwind CSS. It features a dynamic product catalog, advanced category filtering, an interactive cart, and seamless checkout processes with Stripe integration. The responsive design ensures a great shopping experience on all devices.
+this is an e-commerce platform template built with Ruby on Rails, Tailwind CSS, Hotwire and Postgres. It provides a seamless shopping experience, allowing users to browse products, filter categories, add items to their cart, and process secure checkouts with Stripe integration.
 
 ## Getting Started
 
