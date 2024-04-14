@@ -11,8 +11,6 @@ Ruby E-Commerce Platform is a robust template for building online stores, crafte
 
 ### Installation
 ```bash
-git clone https://github.com/your_username/ruby-ecommerce-platform.git
-cd ruby-ecommerce-platform
 bundle install
 bin/rails db:setup
 bin/rails server
