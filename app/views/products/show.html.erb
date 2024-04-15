@@ -1,9 +1,9 @@
 <div class="py-10">
-  <div class="container mx-auto px-4">
+  <div class="container mx-auto px-4" data-controller="products" data-products-product-value="<%= @product.to_json %>">
 
     <!-- Product Image & Details -->
     <div class="flex flex-wrap lg:flex-nowrap justify-center gap-10">
-      
+
       <!-- Image Gallery -->
       <div class="flex flex-col space-y-4">
         <% if @product.images.attached? %>
@@ -25,20 +25,29 @@
 
         <!-- Sizes -->
         <div class="my-8">
-      <p class='uppercase text-lg'>Size</p>
-      <% @product.stocks.each do |stock| %>
-        <% if stock.amount > 0 %>
-          <button data-action="click->products#selectSize" value="<%= stock.size %>" class="bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded hover:bg-gray-300 focus:outline-none focu:ring-2 focus:ring-gray-500 focus:ring-opacity-50">
-            <%= stock.size %>
-          </button>
-        <% else %> 
-          <button disabled value="<%= stock.size %>" class="disabled:bg-gray-400 bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded hover:bg-gray-300 focus:outline-none focu:ring-2 focus:ring-gray-500 focus:ring-opacity-50">
-            <%= stock.size %>
-          </button>
-        <% end %>
-      <% end %>
+          <p class='uppercase text-lg mb-2'>Size</p>
+          <div class="flex gap-2 flex-wrap">
+            <% @product.stocks.each do |stock| %>
+              <% button_class = "py-2 px-4 rounded-lg transition-colors duration-200 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                 if stock.amount > 0 
+                   button_class += " bg-red-500 text-white hover:bg-red-600"
+                 else
+                   button_class += " cursor-not-allowed bg-gray-400 text-gray-600" 
+                 end
+              %>
+              <button <%= 'disabled' unless stock.amount > 0 %> data-action="click->products#selectSize" value="<%= stock.size %>" class="<%= button_class %>">
+                <%= stock.size %>
+              </button>
+            <% end %>
+          </div>
+        </div>
+        <div id="selected-size" class="text-red-500"></div>
+        <button data-action="click->products#addToCart" class="inline-flex items-center justify-center w-full px-5 py-3 text-white bg-red-700 hover:bg-red-800 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+          Add To Cart
+        </button>
+      </div>
+
     </div>
-    <div id="selected-size"></div>
-    <button data-action="click->products#addToCart" class="inline-flex items-center justify-center px-5 py-3 border border-transparent font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">Add To Cart</button>
+
   </div>
 </div>
