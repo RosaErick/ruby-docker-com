@@ -6,6 +6,7 @@ export default class extends Controller {
 
   addToCart() {
     console.log("product: ", this.productValue)
+    console.log("Attempting to add to cart:", this.productValue, this.sizeValue);
     const cart = localStorage.getItem("cart")
     if (cart) {
       const cartArray = JSON.parse(cart)
@@ -36,6 +37,8 @@ export default class extends Controller {
   }
 
   selectSize(e) {
+
+    console.log(e)
     this.sizeValue = e.target.value
     const selectedSizeEl = document.getElementById("selected-size") 
     selectedSizeEl.innerText = `Selected Size: ${this.sizeValue}`

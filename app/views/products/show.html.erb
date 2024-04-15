@@ -25,30 +25,20 @@
 
         <!-- Sizes -->
         <div class="my-8">
-          <h3 class='uppercase text-lg mb-2 dark:text-white'>Size</h3>
-          <div class="flex gap-2 flex-wrap">
-            <% @product.stocks.each do |stock| %>
-              <% button_class = "py-2 px-4 rounded transition-colors duration-200 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                 if stock.amount > 0 
-                   button_class += " bg-gray-200 text-gray-800 hover:bg-gray-300"
-                 else
-                   button_class += " cursor-not-allowed bg-gray-400 text-gray-600" 
-                 end
-              %>
-              <button <%= 'disabled' unless stock.amount > 0 %> value="<%= stock.size %>" class="<%= button_class %>">
-                <%= stock.size %>
-              </button>
-            <% end %>
-          </div>
-        </div>
-
-        <!-- Add To Cart Button -->
-        <button data-action="click->products#addToCart" class="inline-flex items-center justify-center w-full px-5 py-3 text-white bg-gray-800 hover:bg-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 dark:bg-red-600 dark:hover:bg-red-700">
-          Add To Cart
-        </button>
-      </div>
-
+      <p class='uppercase text-lg'>Size</p>
+      <% @product.stocks.each do |stock| %>
+        <% if stock.amount > 0 %>
+          <button data-action="click->products#selectSize" value="<%= stock.size %>" class="bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded hover:bg-gray-300 focus:outline-none focu:ring-2 focus:ring-gray-500 focus:ring-opacity-50">
+            <%= stock.size %>
+          </button>
+        <% else %> 
+          <button disabled value="<%= stock.size %>" class="disabled:bg-gray-400 bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded hover:bg-gray-300 focus:outline-none focu:ring-2 focus:ring-gray-500 focus:ring-opacity-50">
+            <%= stock.size %>
+          </button>
+        <% end %>
+      <% end %>
     </div>
-
+    <div id="selected-size"></div>
+    <button data-action="click->products#addToCart" class="inline-flex items-center justify-center px-5 py-3 border border-transparent font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">Add To Cart</button>
   </div>
 </div>
