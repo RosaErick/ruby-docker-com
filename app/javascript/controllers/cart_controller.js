@@ -1,86 +1,113 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from "@hotwired/stimulus";
 
 // Connects to data-controller="cart"
 export default class extends Controller {
+  static targets = ["items", "total", "errorContainer"];
+
   initialize() {
-
-    console.log("cart controller initialized")
-    const cart = JSON.parse(localStorage.getItem("cart"))
-    if (!cart) {
-      return
-    }
-
-    let total = 0
-    for (let i=0; i < cart.length; i++) {
-      const item = cart[i]
-      total += item.price * item.quantity
-      const div = document.createElement("div")
-      div.classList.add("mt-2")
-      div.innerText = `Item: ${item.name} - $${item.price/100.0} - Size: ${item.size} - Quantity: ${item.quantity}`
-      const deleteButton = document.createElement("button")
-      deleteButton.innerText = "Remove"
-      console.log("item.id: ", item.id)
-      deleteButton.value = JSON.stringify({id: item.id, size: item.size})
-      deleteButton.classList.add("bg-gray-500", "rounded", "text-white", "px-2", "py-1", "ml-2")
-      deleteButton.addEventListener("click", this.removeFromCart)
-      div.appendChild(deleteButton)
-      this.element.prepend(div)
-    }
-
-    const totalEl = document.createElement("div")
-    totalEl.innerText= `Total: $${total/100.0}`
-    let totalContainer = document.getElementById("total")
-    totalContainer.appendChild(totalEl)
+    this.renderCart();
   }
 
-  clear() {
-    localStorage.removeItem("cart")
-    window.location.reload()
+  renderCart() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    this.itemsTarget.innerHTML = '';
+    let total = 0;
+
+    cart.forEach((item, index) => {
+      total += item.price * item.quantity;
+      const itemRow = this.createCartItemRow(item, index);
+      this.itemsTarget.appendChild(itemRow);
+    });
+
+    this.totalTarget.textContent = `Subtotal: $${(total / 100).toFixed(2)}`;
+  }
+
+  createCartItemRow(item, index) {
+    const div = document.createElement("div");
+    div.className = "flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700";
+    const imageSrc = item.image || 'path/to/your/default-image.jpg'; // Replace with path to your default image
+
+    div.innerHTML = `
+      <div class="flex items-center">
+        <img src="${imageSrc}" class="w-20 h-20 object-cover rounded" alt="${item.name}" />
+        <div class="ml-4">
+          <div class="font-medium">${item.name}</div>
+          <div class="text-sm text-gray-600 dark:text-gray-400">$${(item.price / 100).toFixed(2)}</div>
+        </div>
+      </div>
+      <div class="flex items-center">
+        <button class="px-2 py-1 border rounded text-sm mr-2" data-action="click->cart#decreaseQuantity" data-index="${index}">-</button>
+        <span>${item.quantity}</span>
+        <button class="px-2 py-1 border rounded text-sm ml-2" data-action="click->cart#increaseQuantity" data-index="${index}">+</button>
+        <button class="ml-4 text-red-500" data-action="click->cart#removeFromCart" data-index="${index}">&times;</button>
+      </div>
+    `;
+
+    return div;
+  }
+
+  increaseQuantity(event) {
+    const index = event.currentTarget.dataset.index;
+    const cart = JSON.parse(localStorage.getItem("cart"));
+    cart[index].quantity += 1;
+    localStorage.setItem("cart", JSON.stringify(cart));
+    this.renderCart();
+  }
+
+  decreaseQuantity(event) {
+    const index = event.currentTarget.dataset.index;
+    const cart = JSON.parse(localStorage.getItem("cart"));
+    if (cart[index].quantity > 1) {
+      cart[index].quantity -= 1;
+      localStorage.setItem("cart", JSON.stringify(cart));
+      this.renderCart();
+    }
   }
 
   removeFromCart(event) {
-    const cart = JSON.parse(localStorage.getItem("cart"))
-    const values = JSON.parse(event.target.value)
-    const {id, size} = values
-    const index = cart.findIndex(item => item.id === id && item.size === size)
-    if (index >= 0) {
-      cart.splice(index, 1)
-    }
-    localStorage.setItem("cart", JSON.stringify(cart))
-    window.location.reload()
+    const index = event.currentTarget.dataset.index;
+    const cart = JSON.parse(localStorage.getItem("cart"));
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    this.renderCart();
+  }
+
+  clear() {
+    localStorage.removeItem("cart");
+    this.renderCart();
   }
 
   checkout() {
-    const cart = JSON.parse(localStorage.getItem("cart"))
+    const cart = JSON.parse(localStorage.getItem("cart"));
     const payload = {
-      authenticity_token: "",
+      authenticity_token: this.getMetaValue("csrf-token"),
       cart: cart
-    }
-
-    const csrfToken = document.querySelector("[name='csrf-token']").content
+    };
 
     fetch("/checkout", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRF-Token": csrfToken
+        "X-CSRF-Token": this.getMetaValue("csrf-token")
       },
       body: JSON.stringify(payload)
     }).then(response => {
         if (response.ok) {
           response.json().then(body => {
-            window.location.href = body.url
-          })
+            window.location.href = body.url;
+          });
         } else {
           response.json().then(body => {
-            const errorEl = document.createElement("div")
-            errorEl.innerText = `There was an error processing your order. ${body.error}`
-            let errorContainer = document.getElementById("errorContainer")
-            errorContainer.appendChild(errorEl)
-          })
+            const errorEl = document.createElement("div");
+            errorEl.innerText = `There was an error processing your order. ${body.error}`;
+            this.errorContainerTarget.appendChild(errorEl);
+          });
         }
-      })
+      });
   }
 
+  getMetaValue(name) {
+    const element = document.head.querySelector(`meta[name="${name}"]`);
+    return element.getAttribute("content");
+  }
 }
-

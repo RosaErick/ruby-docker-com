@@ -19,6 +19,7 @@ export default class extends Controller {
           name: this.productValue.name,
           price: this.productValue.price,
           size: this.sizeValue,
+          image: this.productValue.image,
           quantity: 1
         })
       }
@@ -30,6 +31,7 @@ export default class extends Controller {
         name: this.productValue.name,
         price: this.productValue.price,
         size: this.sizeValue,
+        image: this.productValue.image,
         quantity: 1
       })
       localStorage.setItem("cart", JSON.stringify(cartArray))
